@@ -6,14 +6,16 @@ public class Disparar : MonoBehaviour
 {
     GameObject Bala;
     GameObject Salida;
+    GameObject Cruceta;
     Vector3 posicionInicial;
     public float velocidad = 60f;
     // Start is called before the first frame update
     void Start()
     {
         
-        Salida = GameObject.Find("Salida");
-        Bala   = Resources.Load<GameObject>("Bala");
+        Salida   = GameObject.Find("Salida");
+        Bala     = Resources.Load<GameObject>("Bala");
+        Cruceta = GameObject.Find("Cruceta");
 
         posicionInicial = Salida.transform.position;
 
@@ -23,7 +25,7 @@ public class Disparar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Salida.transform.LookAt(Cruceta.transform);
     }
 
     private void OnMouseDown()
@@ -31,7 +33,9 @@ public class Disparar : MonoBehaviour
         Bala = Instantiate(Bala, posicionInicial, transform.rotation);
         Rigidbody rb = Bala.GetComponent<Rigidbody>();
 
-        Vector3 direccionDeDisparo = new Vector3(0f, 1f, 1f).normalized; // o tambi�n podr�as usar un Vector3 fijo, como Vector3.forward si quieres disparar hacia el frente global
+
+        Vector3 direccionDeDisparo = (Cruceta.transform.position - Bala.transform.position).normalized;
+        Bala.transform.forward = direccionDeDisparo;
         rb.velocity = direccionDeDisparo * velocidad;
 
     }

@@ -20,6 +20,7 @@ public class Destroy : MonoBehaviour
     public void OnTriggerEnter(Collider other)
     {
         Destroy(gameObject);
+        Destroy(other.gameObject);
 
         gameManager.GenerarNuevaDiana();
 

@@ -9,12 +9,18 @@ public class GameManager : MonoBehaviour
     public GameObject diana;
     static public TextMeshProUGUI Tbalas;
     static public TextMeshProUGUI Tdianas;
+    static public TextMeshProUGUI Tfuerza;
     static int numBalas = 0;
     static int numDianas = 1;
+    static float numFuerza = 0;
+    static Disparar dispararScript;
+
 
     // Start is called before the first frame update
     public void Start()
     {
+        dispararScript = GameObject.Find("Disparo").GetComponent<Disparar>();
+
         posicionesDiana = GameObject.FindGameObjectsWithTag("respawnDiana");
         diana           = Resources.Load<GameObject>("PDiana");
 
@@ -23,6 +29,9 @@ public class GameManager : MonoBehaviour
 
         GameObject contadorD = GameObject.Find("ContadorD");
         Tdianas              = contadorD.GetComponent<TextMeshProUGUI>();
+
+        GameObject fuerza = GameObject.Find("Fuerza");
+        Tfuerza = fuerza.GetComponent<TextMeshProUGUI>();
 
         // MOVER LA ESFERA A UNA POSICI�N ALEATORIA
         int tamanyoArrayDianas = posicionesDiana.Length; // tama�o = 5
@@ -44,6 +53,13 @@ public class GameManager : MonoBehaviour
     {
         numDianas++;
         Tdianas.text = "Dianas: " + numDianas;
+    }
+
+    static public void IncFuerza()
+    {
+        numFuerza = dispararScript.velocidadi;
+        Tfuerza.text = "Fuerza: " + numFuerza;
+
     }
 
     public void GenerarNuevaDiana()

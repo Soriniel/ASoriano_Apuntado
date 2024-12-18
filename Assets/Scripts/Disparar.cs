@@ -9,6 +9,7 @@ public class Disparar : MonoBehaviour
     GameObject Cruceta;
     Vector3 posicionInicial;
     public float velocidad;
+    public int velocidadi;
     public float tiempoInicio;
     public GameManager gameManager;
     // Start is called before the first frame update
@@ -16,7 +17,8 @@ public class Disparar : MonoBehaviour
     {
         
         Salida   = GameObject.Find("Salida");
-        Cruceta = GameObject.Find("Cruceta");
+        Cruceta  = GameObject.Find("Cruceta");
+
         GameManager gameManager = FindObjectOfType<GameManager>();
 
         posicionInicial = Salida.transform.position;
@@ -35,7 +37,6 @@ public class Disparar : MonoBehaviour
     {
         tiempoInicio =  Time.time;
         Debug.Log("1 - " + tiempoInicio);
-
     }
     public void OnMouseUp()
     {
@@ -43,7 +44,8 @@ public class Disparar : MonoBehaviour
         Debug.Log("2 - " + tiempoFinal);
 
         velocidad = tiempoFinal - tiempoInicio;
-        velocidad = velocidad * 10;
+        velocidad = velocidad * 20;
+        velocidadi = (int)velocidad;
 
         Debug.Log(velocidad);
 
@@ -57,6 +59,8 @@ public class Disparar : MonoBehaviour
         rb.velocity = direccionDeDisparo * velocidad;
 
         GameManager.IncNumBalas();
+
+        GameManager.IncFuerza();
 
     }
 }

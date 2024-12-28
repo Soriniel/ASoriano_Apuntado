@@ -29,6 +29,7 @@ public class Disparar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        posicionInicial = Salida.transform.position;
         Salida.transform.LookAt(Cruceta.transform);
         Bala = Resources.Load<GameObject>("Bala");
     }

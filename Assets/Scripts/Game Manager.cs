@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
         dispararScript = GameObject.Find("Disparo").GetComponent<Disparar>();
 
         posicionesDiana = GameObject.FindGameObjectsWithTag("respawnDiana");
-        diana           = Resources.Load<GameObject>("PDiana");
+        diana           = Resources.Load<GameObject>("Target");
 
         GameObject contador = GameObject.Find("Contador");
         Tbalas              =  contador.GetComponent<TextMeshProUGUI>();
@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
     public void GenerarNuevaDiana()
     {
         posicionesDiana = GameObject.FindGameObjectsWithTag("respawnDiana");
-        diana = Resources.Load<GameObject>("PDiana");
+        diana = Resources.Load<GameObject>("Target");
 
         int tamanyoArrayDianas = posicionesDiana.Length;
         int numeroAleatorio = Random.Range(0, tamanyoArrayDianas);

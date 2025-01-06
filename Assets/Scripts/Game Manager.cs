@@ -5,42 +5,61 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    GameObject[] posicionesDiana;
-    public GameObject diana;
-    static public TextMeshProUGUI Tbalas;
-    static public TextMeshProUGUI Tdianas;
-    static public TextMeshProUGUI Tfuerza;
-    static int numBalas = 0;
-    static int numDianas = 1;
-    static float numFuerza = 0;
-    static Disparar dispararScript;
+    public Timer timer;
+
+    public float minX = -10f; // Límite mínimo en X
+    public float maxX = 10f;  // Límite máximo en X
+    public float minY = 0f;   // Límite mínimo en Y
+    public float maxY = 5f;   // Límite máximo en Y
+
+    public static GameObject diana;
+    public static GameObject dianaA;
+    public static GameObject boton;
+    public static GameObject winner;
+    public static GameObject loser;
+    public static int numBalas = 0;
+    public static int numDianas = -1;
+    public static int numFuerza = 0;
+
+    public static TextMeshProUGUI Tbalas;
+    public static TextMeshProUGUI Tdianas;
+    public static TextMeshProUGUI Tfuerza;
+    public static TextMeshProUGUI resultadoFinalText;
 
 
-    // Start is called before the first frame update
+    public static Disparar dispararScript;
+
+    public static GameObject Cruceta;
+
     public void Start()
     {
+        timer = FindObjectOfType<Timer>();
+
         dispararScript = GameObject.Find("Disparo").GetComponent<Disparar>();
 
-        posicionesDiana = GameObject.FindGameObjectsWithTag("respawnDiana");
-        diana           = Resources.Load<GameObject>("Target");
+        diana = Resources.Load<GameObject>("Target");
+        Cruceta = GameObject.Find("Cruceta");
+        boton = GameObject.Find("Button");
+        winner = GameObject.Find("Winner");
+        loser = GameObject.Find("Loser");
 
         GameObject contador = GameObject.Find("Contador");
-        Tbalas              =  contador.GetComponent<TextMeshProUGUI>();
+        Tbalas = contador.GetComponent<TextMeshProUGUI>();
 
         GameObject contadorD = GameObject.Find("ContadorD");
-        Tdianas              = contadorD.GetComponent<TextMeshProUGUI>();
+        Tdianas = contadorD.GetComponent<TextMeshProUGUI>();
 
         GameObject fuerza = GameObject.Find("Fuerza");
         Tfuerza = fuerza.GetComponent<TextMeshProUGUI>();
 
-        // MOVER LA ESFERA A UNA POSICI�N ALEATORIA
-        int tamanyoArrayDianas = posicionesDiana.Length; // tama�o = 5
-        int numeroAleatorio = Random.Range(0, tamanyoArrayDianas); // rango de 0 a 4
+        GameObject resultado = GameObject.Find("ResultadoFinal");
+        resultadoFinalText = resultado.GetComponent<TextMeshProUGUI>();
+        resultadoFinalText.gameObject.SetActive(false);
+        winner.gameObject.SetActive(false);
+        loser.gameObject.SetActive(false);
 
-        GameObject dianaAleatoria = posicionesDiana[numeroAleatorio];
 
-        Instantiate(diana, dianaAleatoria.transform.position, Quaternion.identity);
-
+        GenerarNuevaDiana(); // Generar la primera diana
     }
 
     static public void IncNumBalas()
@@ -59,25 +78,66 @@ public class GameManager : MonoBehaviour
     {
         numFuerza = dispararScript.velocidadi;
         Tfuerza.text = "Fuerza: " + numFuerza;
-
     }
 
     public void GenerarNuevaDiana()
     {
-        posicionesDiana = GameObject.FindGameObjectsWithTag("respawnDiana");
-        diana = Resources.Load<GameObject>("Target");
+        // Generar posición aleatoria dentro de los límites definidos
+        float posX = Random.Range(minX, maxX);
+        float posY = Random.Range(minY, maxY);
 
-        int tamanyoArrayDianas = posicionesDiana.Length;
-        int numeroAleatorio = Random.Range(0, tamanyoArrayDianas);
-        GameObject dianaAleatoria = posicionesDiana[numeroAleatorio];
-        Instantiate(diana, dianaAleatoria.transform.position, Quaternion.identity);
+        Vector3 posicionAleatoria = new Vector3(posX, posY, 0f); // Suponiendo que Z es 0
+        Instantiate(diana, posicionAleatoria, Quaternion.identity);
         IncNumDianas();
-        // CADA VEZ QUE UNA DIANA DESAPAREZCA, TENEMOS QUE LLAMAR
-        // A ESTA FUNCI�N, PARA QUE GENERE UNA NUEVA MEDIANTE INSTANTIATE
     }
 
+    static public void FinalizarJuego()
+    {
+        float porcentajePrecision = numBalas > 0 ? ((float)numDianas  / numBalas) * 100 : 0;
+        resultadoFinalText.gameObject.SetActive(true);
+        resultadoFinalText.text = $"Dianas acertadas: {numDianas }\n" +
+                                  $"Balas disparadas: {numBalas}\n" +
+                                  $"Precisión: {porcentajePrecision:F2}%";
+
+        if (numDianas >= 10 && porcentajePrecision > 50 )
+        {
+            Victoria();
+        }
+        else
+        {
+            Derrota();
+        }
+
+        OcultarElementos();
+    }
+    private static void OcultarElementos()
+    {
+        dianaA = GameObject.FindWithTag("Enemigo");
+
+        if (Tbalas != null) Tbalas.gameObject.SetActive(false);
+        if (Tdianas != null) Tdianas.gameObject.SetActive(false);
+        if (Tfuerza != null) Tfuerza.gameObject.SetActive(false);
+        if (Cruceta != null) Cruceta.gameObject.SetActive(false);
+        if (dianaA != null) dianaA.gameObject.SetActive(false);
+        if (boton != null) boton.gameObject.SetActive(false);
+
+        dispararScript.enabled = false;
 
 
+    }
 
+    private static void Victoria()
+    {
+        winner.gameObject.SetActive(true);
+    }
+    private static void Derrota()
+    {
+        loser.gameObject.SetActive(true);
+    }
 }
+
+
+
+
+
 

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Bala
   - respawnDiana
+  - Enemigo
   layers:
   - Default
   - TransparentFX

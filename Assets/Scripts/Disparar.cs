@@ -12,18 +12,16 @@ public class Disparar : MonoBehaviour
     public int velocidadi;
     public float tiempoInicio;
     public GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
-        
-        Salida   = GameObject.Find("Salida");
-        Cruceta  = GameObject.Find("Cruceta");
+        Salida = GameObject.Find("Salida");
+        Cruceta = GameObject.Find("Cruceta");
 
-        GameManager gameManager = FindObjectOfType<GameManager>();
+        gameManager = FindObjectOfType<GameManager>();
 
         posicionInicial = Salida.transform.position;
-
-
     }
 
     // Update is called once per frame
@@ -32,36 +30,38 @@ public class Disparar : MonoBehaviour
         posicionInicial = Salida.transform.position;
         Salida.transform.LookAt(Cruceta.transform);
         Bala = Resources.Load<GameObject>("Bala");
-    }
 
-    public void OnMouseDown()
-    {
-        tiempoInicio =  Time.time;
-        Debug.Log("1 - " + tiempoInicio);
-    }
-    public void OnMouseUp()
-    {
-        float tiempoFinal = Time.time;
-        Debug.Log("2 - " + tiempoFinal);
+        // Detectar inicio de disparo (presionar Espacio)
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            tiempoInicio = Time.time;
+            Debug.Log("Disparo iniciado: " + tiempoInicio);
+        }
 
-        velocidad = tiempoFinal - tiempoInicio;
-        velocidad = velocidad * 20;
-        velocidadi = (int)velocidad;
+        // Detectar fin de disparo (soltar Espacio)
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            float tiempoFinal = Time.time;
+            Debug.Log("Disparo finalizado: " + tiempoFinal);
 
-        Debug.Log(velocidad);
+            velocidad = tiempoFinal - tiempoInicio;
+            velocidad = velocidad * 20;
+            velocidadi = (int)velocidad;
 
+            Debug.Log("Velocidad calculada: " + velocidad);
 
-        Bala = Instantiate(Bala, posicionInicial, transform.rotation);
-        Rigidbody rb = Bala.GetComponent<Rigidbody>();
+            // Crear la bala
+            Bala = Instantiate(Bala, posicionInicial, transform.rotation);
+            Rigidbody rb = Bala.GetComponent<Rigidbody>();
 
+            // Calcular dirección y aplicar velocidad
+            Vector3 direccionDeDisparo = (Cruceta.transform.position - Bala.transform.position).normalized;
+            Bala.transform.forward = direccionDeDisparo;
+            rb.velocity = direccionDeDisparo * velocidad;
 
-        Vector3 direccionDeDisparo = (Cruceta.transform.position - Bala.transform.position).normalized;
-        Bala.transform.forward = direccionDeDisparo;
-        rb.velocity = direccionDeDisparo * velocidad;
-
-        GameManager.IncNumBalas();
-
-        GameManager.IncFuerza();
-
+            // Incrementar contadores en el GameManager
+            GameManager.IncNumBalas();
+            GameManager.IncFuerza();
+        }
     }
 }

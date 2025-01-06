@@ -31,8 +31,14 @@ public class GameManager : MonoBehaviour
 
     public static GameObject Cruceta;
 
+    public AudioClip sonidoVictoria;
+    public AudioClip sonidoDerrota;
+    AudioSource fuenteSonido;
+
     public void Start()
     {
+        fuenteSonido = this.GetComponent<AudioSource>();
+
         timer = FindObjectOfType<Timer>();
 
         dispararScript = GameObject.Find("Disparo").GetComponent<Disparar>();
@@ -126,7 +132,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private static void Victoria()
+    public static void Victoria()
     {
         winner.gameObject.SetActive(true);
     }

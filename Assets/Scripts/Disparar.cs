@@ -12,6 +12,8 @@ public class Disparar : MonoBehaviour
     public int velocidadi;
     public float tiempoInicio;
     public GameManager gameManager;
+    public AudioClip sonidoDisparo;
+    AudioSource fuenteSonido;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +24,9 @@ public class Disparar : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
 
         posicionInicial = Salida.transform.position;
+
+        fuenteSonido = this.GetComponent<AudioSource>();
+        
     }
 
     // Update is called once per frame
@@ -41,6 +46,8 @@ public class Disparar : MonoBehaviour
         // Detectar fin de disparo (soltar Espacio)
         if (Input.GetKeyUp(KeyCode.Space))
         {
+            fuenteSonido.clip = sonidoDisparo;
+            fuenteSonido.Play();
             float tiempoFinal = Time.time;
             Debug.Log("Disparo finalizado: " + tiempoFinal);
 
@@ -62,6 +69,7 @@ public class Disparar : MonoBehaviour
             // Incrementar contadores en el GameManager
             GameManager.IncNumBalas();
             GameManager.IncFuerza();
+      
         }
     }
 }

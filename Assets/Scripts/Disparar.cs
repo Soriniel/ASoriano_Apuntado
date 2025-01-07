@@ -72,4 +72,9 @@ public class Disparar : MonoBehaviour
       
         }
     }
+
+    public void Test()
+    {
+        Debug.Log("test");
+     }
 }

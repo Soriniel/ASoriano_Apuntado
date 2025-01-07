@@ -6,8 +6,9 @@ using UnityEngine.SceneManagement;
 public class CambioEscena : MonoBehaviour
 {
 
-    public void EscenaFacil(string sceneName)
+    public void EscenaFacil()
     {
-        SceneManager.LoadScene(sceneName);
+        Debug.Log("escena");
+        SceneManager.LoadScene(1);
     }
 }
